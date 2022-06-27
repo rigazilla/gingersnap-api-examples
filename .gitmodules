@@ -1,0 +1,3 @@
+[submodule "engytita-api"]
+	path = engytita-api
+	url = https://github.com/engytita/engytita-api.git
