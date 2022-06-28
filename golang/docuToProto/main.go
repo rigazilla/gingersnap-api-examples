@@ -4,13 +4,18 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/engytita/engytita-api/examples/golang/config/cache/v1alpha"
 	"github.com/golang/protobuf/proto"
+	"github.com/rigazilla/engytita-api-examples/golang/config/cache/v1alpha"
 	"google.golang.org/protobuf/encoding/protojson"
 	yamme "sigs.k8s.io/yaml"
 )
 
-//go:generate protoc --proto_path=../../engytita-api  --go_out=../config/cache/v1alpha --go_opt=module=github.com/engytita/engytita-api/example/golang config/cache/v1alpha/region.proto config/cache/v1alpha/cache.proto config/cache/v1alpha/datasource.proto
+// Command below generates the set of .pb.go files. .proto comes for the engytita-api project
+// imported as submodule of this repo.
+// The --go_opt=module=.. strips out the default module for the generated files, so files are generated
+// in the `config/cache/v1alpha` folder in the go module root and can be imported as
+// `import "your-module-name/config/cache/v1alpha`
+//go:generate protoc --proto_path=../../engytita-api  --go_out=.. --go_opt=module=github.com/engytita/engytita-api/example/golang config/cache/v1alpha/region.proto config/cache/v1alpha/cache.proto config/cache/v1alpha/datasource.proto
 
 func main() {
 	yaml := `

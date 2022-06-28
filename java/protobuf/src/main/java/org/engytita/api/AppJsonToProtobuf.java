@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.google.protobuf.TextFormat;
 import com.google.protobuf.util.JsonFormat;
 
 import config.cache.v1alpha.Cache;
@@ -40,7 +41,7 @@ public class AppJsonToProtobuf {
         try {
             String json = convertYamlToJson(yaml);
             JsonFormat.parser().merge(json, cache);
-            System.out.println(JsonFormat.printer().print(cache.build()));
+            System.out.println(TextFormat.printer().escapingNonAscii(false).shortDebugString(cache.build()));
         } catch (Exception e) {
             e.printStackTrace();
         }
