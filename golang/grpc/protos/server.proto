@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option go_package = "regionstore/v1alpha";
+import "config/cache/v1alpha/region.proto";
+package regionstore;
+
+service RegionStore {
+  rpc CreateRegion(CreateRegionRequest) returns (config.cache.v1alpha.Region);
+  rpc GetRegion(GetRegionRequest) returns (config.cache.v1alpha.Region);
+}
+message CreateRegionRequest { config.cache.v1alpha.Region region = 1; }
+message GetRegionRequest { string name = 1; }
