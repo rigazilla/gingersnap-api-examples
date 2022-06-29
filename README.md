@@ -2,6 +2,9 @@
 Engytita entities needed for administration and configuration are described as a set of .proto file that can be used to generate protobuf code to handle them as document or grpc code to handle them as arguments for rpc operations.
 
 This is a collection of examples that consume engytita-api .proto definitions in both ways is differents languages. Each example has its own readme with more info.
+Engytita API spec are include as git submodule, after cloned you may want to run:
+- `git submodule init`
+- `git submodule update`
 
 ## Golang
 ### Protobuf document
