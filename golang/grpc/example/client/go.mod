@@ -1,10 +1,11 @@
-module github.com/rigazilla/engytita-api-examples/golang/grpc
+module github.com/rigazilla/engytita-api-examples/golang/grpc/client
 
 go 1.18
 
-require google.golang.org/protobuf v1.28.0
-
-require google.golang.org/grpc v1.47.0
+require (
+	google.golang.org/grpc v1.49.0
+	google.golang.org/protobuf v1.28.1
+)
 
 require (
 	github.com/golang/protobuf v1.5.2 // indirect
