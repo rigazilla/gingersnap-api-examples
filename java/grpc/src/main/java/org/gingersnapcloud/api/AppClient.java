@@ -1,4 +1,4 @@
-package org.engytita.api;
+package org.gingersnapcloud.api;
 
 import com.google.protobuf.Duration;
 import com.google.protobuf.util.JsonFormat;

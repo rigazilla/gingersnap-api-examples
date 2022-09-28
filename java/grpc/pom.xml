@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.engytita.api</groupId>
+	<groupId>org.gingersnap-cloud.api</groupId>
 	<artifactId>grpc</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<name>grpc</name>
 	<properties>
-		<org.engytita.api.basedir>${project.basedir}/../../engytita-api</org.engytita.api.basedir>
+		<org.gingersnap-cloud.api.basedir>${project.basedir}/../../gingersnap-cloud-api</org.gingersnap-cloud.api.basedir>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		    <grpc.version>1.47.0</grpc.version><!-- CURRENT_GRPC_VERSION -->
@@ -95,8 +95,8 @@
 							<goal>test-compile</goal>
 						</goals>
 				<configuration>
-					<outputDirectory>${project.build.directory}/generated-sources/protobuf/engytitaApi</outputDirectory>
-					<protoSourceRoot>${org.engytita.api.basedir}</protoSourceRoot>
+					<outputDirectory>${project.build.directory}/generated-sources/protobuf/gingersnapCloudApi</outputDirectory>
+					<protoSourceRoot>${org.gingersnap-cloud.api.basedir}</protoSourceRoot>
 					<protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
 				</configuration>
 					</execution>
@@ -107,7 +107,7 @@
 							<goal>compile-custom</goal>
 						</goals>
 				<configuration>
-					<additionalProtoPathElements>${org.engytita.api.basedir}</additionalProtoPathElements>
+					<additionalProtoPathElements>${org.gingersnap-cloud.api.basedir}</additionalProtoPathElements>
 					<protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
 					<pluginId>grpc-java</pluginId>
 					<pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
@@ -126,7 +126,7 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>${project.build.directory}/generated-sources/protobuf/engytitaApi</source>
+								<source>${project.build.directory}/generated-sources/protobuf/gingersnapCloudApi</source>
 								<source>${project.build.directory}/generated-sources/protobuf/java</source>
 								<source>${project.build.directory}/generated-sources/protobuf/grpc-java</source>
 							</sources>

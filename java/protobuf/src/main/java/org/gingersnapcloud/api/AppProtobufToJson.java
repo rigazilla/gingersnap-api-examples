@@ -1,4 +1,4 @@
-package org.engytita.api;
+package org.gingersnapcloud.api;
 
 import java.util.ArrayList;
 import java.util.List;

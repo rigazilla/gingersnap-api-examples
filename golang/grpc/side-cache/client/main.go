@@ -25,7 +25,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	cachepb "github.com/rigazilla/engytita-api-examples/golang/grpc/side-cache/client/engytita-api/service/cache/v1alpha"
+	cachepb "github.com/rigazilla/engytita-api-examples/golang/grpc/side-cache/client/gingersnap-cloud-api/service/cache/v1alpha"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -34,8 +34,8 @@ const (
 	defaultName = "world"
 )
 
-//go:generate protoc --proto_path=../../../../ engytita-api/service/cache/v1alpha/cache.proto --go-grpc_out=. --go_out=.
-//go:generate protoc --proto_path=../../../../ --grpc-gateway_out=logtostderr=true:. engytita-api/service/cache/v1alpha/cache.proto
+//go:generate protoc --proto_path=../../../../gingersnap-cloud-api service/cache/v1alpha/cache.proto --go-grpc_out=. --go_out=.
+//go:generate protoc --proto_path=../../../../gingersnap-cloud-api --grpc-gateway_out=logtostderr=true:. service/cache/v1alpha/cache.proto
 
 func main() {
 	if os.Getenv("GRPC_SERVER_PORT") == "" {

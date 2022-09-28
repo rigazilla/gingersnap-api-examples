@@ -25,7 +25,7 @@ import (
 	"log"
 	"time"
 
-	pb "github.com/rigazilla/engytita-api-examples/golang/grpc/client/engytita-api/config/cache/v1alpha"
+	pb "github.com/rigazilla/engytita-api-examples/golang/grpc/client/gingersnap-cloud-api/config/cache/v1alpha"
 	gr "github.com/rigazilla/engytita-api-examples/golang/grpc/client/regionstore/v1alpha"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -40,8 +40,8 @@ var (
 	name = flag.String("name", defaultName, "Name to greet")
 )
 
-//go:generate protoc --proto_path=../protos/ --proto_path=../../../../engytita-api/ --go_out=. --go-grpc_out=. config/cache/v1alpha/region.proto config/cache/v1alpha/cache.proto config/cache/v1alpha/datasource.proto
-//go:generate protoc --proto_path=../protos/ --proto_path=../../../../engytita-api/ --go-grpc_opt=Mconfig/cache/v1alpha/region.proto=github.com/rigazilla/engytita-api-examples/golang/grpc/client/engytita-api/config/cache/v1alpha --go_opt=Mconfig/cache/v1alpha/region.proto=github.com/rigazilla/engytita-api-examples/golang/grpc/client/engytita-api/config/cache/v1alpha --go_out=. --go-grpc_out=.  server.proto
+//go:generate protoc --proto_path=../protos/ --proto_path=../../../../gingersnap-cloud-api/ --go_out=. --go-grpc_out=. config/cache/v1alpha/region.proto config/cache/v1alpha/cache.proto config/cache/v1alpha/datasource.proto
+//go:generate protoc --proto_path=../protos/ --proto_path=../../../../gingersnap-cloud-api/ --go-grpc_opt=Mconfig/cache/v1alpha/region.proto=github.com/rigazilla/engytita-api-examples/golang/grpc/client/gingersnap-cloud-api/config/cache/v1alpha --go_opt=Mconfig/cache/v1alpha/region.proto=github.com/rigazilla/engytita-api-examples/golang/grpc/client/gingersnap-cloud-api/config/cache/v1alpha --go_out=. --go-grpc_out=.  server.proto
 func main() {
 	flag.Parse()
 	// Set up a connection to the server.

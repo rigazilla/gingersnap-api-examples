@@ -11,14 +11,13 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/joho/godotenv"
-	cachepb "github.com/rigazilla/engytita-api-examples/golang/grpc/side-cache/service/engytita-api/service/cache/v1alpha"
+	cachepb "github.com/rigazilla/engytita-api-examples/golang/grpc/side-cache/service/gingersnap-cloud-api/service/cache/v1alpha"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 )
 
-// DISABLED go:generate protoc --proto_path=../protos/ --proto_path=../../../../engytita-api/ --go_out=.. --go-grpc_out=.. config/cache/v1alpha/region.proto config/cache/v1alpha/cache.proto config/cache/v1alpha/datasource.proto
-//go:generate protoc --proto_path=../../../../ engytita-api/service/cache/v1alpha/cache.proto --go-grpc_out=.
-//go:generate protoc --proto_path=../../../../ --grpc-gateway_out=logtostderr=true:. engytita-api/service/cache/v1alpha/cache.proto
+//go:generate protoc --proto_path=../../../../gingersnap-cloud-api service/cache/v1alpha/cache.proto --go-grpc_out=. --go_out=.
+//go:generate protoc --proto_path=../../../../gingersnap-cloud-api --grpc-gateway_out=logtostderr=true:. service/cache/v1alpha/cache.proto
 type cacheServer struct {
 	cachepb.UnimplementedCacheServiceServer
 }

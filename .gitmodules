@@ -1,3 +1,3 @@
-[submodule "engytita-api"]
-	path = engytita-api
-	url = https://github.com/engytita/engytita-api.git
+[submodule "gingersnap-cloud-api"]
+	path = gingersnap-cloud-api
+	url = git@github.com:gingersnap-cloud/api.git
