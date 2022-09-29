@@ -25,7 +25,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	cachepb "github.com/rigazilla/engytita-api-examples/golang/grpc/side-cache/client/gingersnap-cloud-api/service/cache/v1alpha"
+	cachepb "github.com/rigazilla/gingersnap-cloud-api-examples/golang/grpc/side-cache/client/gingersnap-cloud-api/service/cache/v1alpha"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

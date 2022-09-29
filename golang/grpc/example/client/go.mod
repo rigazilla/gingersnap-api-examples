@@ -1,4 +1,4 @@
-module github.com/rigazilla/engytita-api-examples/golang/grpc/client
+module github.com/rigazilla/gingersnap-cloud-api-examples/golang/grpc/example/client
 
 go 1.18
 

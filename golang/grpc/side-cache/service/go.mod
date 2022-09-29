@@ -1,19 +1,20 @@
-module github.com/rigazilla/engytita-api-examples/golang/grpc/side-cache/service
+module github.com/rigazilla/gingersnap-cloud-api-examples/golang/grpc/side-cache/service
 
 go 1.18
 
 require (
-	github.com/golang/protobuf v1.5.2
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.11.3
 	github.com/joho/godotenv v1.4.0
 	github.com/spf13/viper v1.13.0
-	google.golang.org/genproto v0.0.0-20220927151529-dcaddaf36704
+	google.golang.org/genproto v0.0.0-20220929141241-1ce7b20da813
 	google.golang.org/grpc v1.49.0
 	google.golang.org/protobuf v1.28.1
 )
 
 require (
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect

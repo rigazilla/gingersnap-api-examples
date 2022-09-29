@@ -9,9 +9,9 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/joho/godotenv"
-	cachepb "github.com/rigazilla/engytita-api-examples/golang/grpc/side-cache/service/gingersnap-cloud-api/service/cache/v1alpha"
+	cachepb "github.com/rigazilla/gingersnap-cloud-api-examples/golang/grpc/side-cache/service/gingersnap-cloud-api/service/cache/v1alpha"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 )
