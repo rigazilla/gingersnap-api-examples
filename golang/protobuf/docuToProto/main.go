@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/rigazilla/engytita-api-examples/golang/protobuf/gingersnap-cloud-api/config/cache/v1alpha"
+	"github.com/rigazilla/gingersnap-cloud-api-examples/golang/protobuf/gingersnap-cloud-api/config/cache/v1alpha"
 	"google.golang.org/protobuf/encoding/protojson"
 	yamme "sigs.k8s.io/yaml"
 )
