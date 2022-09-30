@@ -66,7 +66,7 @@ func main() {
 	}
 
 	if retVal, err := cv1alpha2.Get(context.Background(), &cachepbv1alpha2.Key{Key: []byte{'g', 'R', 'P', 'C'}}); err == nil {
-		fmt.Printf(("Result %v\n"), retVal)
+		fmt.Printf(("v1alpha2 Result %v\n"), retVal)
 	} else {
 		fmt.Printf("Error in invocation: %v\n", err)
 	}

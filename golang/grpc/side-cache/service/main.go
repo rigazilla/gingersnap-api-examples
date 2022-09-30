@@ -33,13 +33,13 @@ type cacheServervalpha2 struct {
 func (s *cacheServer) Get(ctx context.Context, k *cachepb.Key) (*cachepb.Value, error) {
 
 	retVal := &cachepb.Value{Value: append([]byte{'h', 'e', 'l', 'l', 'o', ' '}, k.Key...)}
-	fmt.Printf("Called Get on server")
+	fmt.Printf("Called Get on server\n")
 	return retVal, nil
 }
 
 func (s *cacheServervalpha2) Get(ctx context.Context, k *cachepbv1alpha2.Key) (*cachepbv1alpha2.Value, error) {
 	retVal := &cachepbv1alpha2.Value{Value: append([]byte("Ciao "), k.Key...)}
-	fmt.Printf("v1alpha2: Called Get on server")
+	fmt.Printf("v1alpha2: Called Get on server\n")
 	return retVal, nil
 }
 
