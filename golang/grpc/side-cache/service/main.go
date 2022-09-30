@@ -12,20 +12,34 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/joho/godotenv"
 	cachepb "github.com/rigazilla/gingersnap-cloud-api-examples/golang/grpc/side-cache/service/gingersnap-cloud-api/service/cache/v1alpha"
+	cachepbv1alpha2 "github.com/rigazilla/gingersnap-cloud-api-examples/golang/grpc/side-cache/service/gingersnap-cloud-api/service/cache/v1alpha2"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 //go:generate protoc --proto_path=../../../../gingersnap-cloud-api service/cache/v1alpha/cache.proto --go-grpc_out=. --go_out=.
 //go:generate protoc --proto_path=../../../../gingersnap-cloud-api --grpc-gateway_out=logtostderr=true:. service/cache/v1alpha/cache.proto
+//go:generate protoc --proto_path=../../../../gingersnap-cloud-api service/cache/v1alpha2/cache.proto --go-grpc_out=. --go_out=.
+//go:generate protoc --proto_path=../../../../gingersnap-cloud-api --grpc-gateway_out=logtostderr=true:. service/cache/v1alpha2/cache.proto
 type cacheServer struct {
 	cachepb.UnimplementedCacheServiceServer
+}
+
+type cacheServervalpha2 struct {
+	cachepbv1alpha2.UnimplementedCacheServiceServer
 }
 
 func (s *cacheServer) Get(ctx context.Context, k *cachepb.Key) (*cachepb.Value, error) {
 
 	retVal := &cachepb.Value{Value: append([]byte{'h', 'e', 'l', 'l', 'o', ' '}, k.Key...)}
 	fmt.Printf("Called Get on server")
+	return retVal, nil
+}
+
+func (s *cacheServervalpha2) Get(ctx context.Context, k *cachepbv1alpha2.Key) (*cachepbv1alpha2.Value, error) {
+	retVal := &cachepbv1alpha2.Value{Value: append([]byte("Ciao "), k.Key...)}
+	fmt.Printf("v1alpha2: Called Get on server")
 	return retVal, nil
 }
 
@@ -47,6 +61,7 @@ func main() {
 	s := grpc.NewServer()
 	// Attach the User service to the server
 	cachepb.RegisterCacheServiceServer(s, &cacheServer{})
+	cachepbv1alpha2.RegisterCacheServiceServer(s, &cacheServervalpha2{})
 
 	// Serve gRPC server
 	log.Printf("Serving gRPC on %s:%s", os.Getenv("SERVER_HOST"), os.Getenv("GRPC_SERVER_PORT"))
@@ -61,7 +76,7 @@ func main() {
 		context.Background(),
 		fmt.Sprintf("%s:%s", os.Getenv("SERVER_HOST"), os.Getenv("GRPC_SERVER_PORT")),
 		grpc.WithBlock(),
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(maxMsgSize), grpc.MaxCallSendMsgSize(maxMsgSize)),
 	)
 	if err != nil {
@@ -69,9 +84,14 @@ func main() {
 	}
 
 	gwmux := runtime.NewServeMux()
-	newServer := cachepb.RegisterCacheServiceHandler(context.Background(), gwmux, conn)
-	if newServer != nil {
-		log.Fatalln("Failed to register gateway:", newServer)
+	errNewServ := cachepb.RegisterCacheServiceHandler(context.Background(), gwmux, conn)
+	if errNewServ != nil {
+		log.Fatalln("Failed to register gateway:", errNewServ)
+	}
+
+	errNewServ = cachepbv1alpha2.RegisterCacheServiceHandler(context.Background(), gwmux, conn)
+	if errNewServ != nil {
+		log.Fatalln("Failed to register gateway:", errNewServ)
 	}
 
 	gwServer := &http.Server{
