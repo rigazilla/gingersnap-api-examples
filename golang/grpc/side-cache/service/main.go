@@ -37,10 +37,36 @@ func (s *cacheServer) Get(ctx context.Context, k *cachepb.Key) (*cachepb.Value, 
 	return retVal, nil
 }
 
-func (s *cacheServervalpha2) Get(ctx context.Context, k *cachepbv1alpha2.Key) (*cachepbv1alpha2.Value, error) {
-	retVal := &cachepbv1alpha2.Value{Value: append([]byte("Ciao "), k.Key...)}
-	fmt.Printf("v1alpha2: Called Get on server\n")
-	return retVal, nil
+// v1alpha2 implementation
+
+var cache map[string]string = map[string]string{}
+
+func (s *cacheServervalpha2) Get(ctx context.Context, k *cachepbv1alpha2.GetRequest) (*cachepbv1alpha2.GetResponse, error) {
+	retVal, ok := cache[k.Key.Key]
+	if ok {
+		fmt.Printf("v1alpha2: Called Get on server, return value: %s\n", retVal)
+		response := &cachepbv1alpha2.GetResponse{Value: &cachepbv1alpha2.Value{Value: retVal}}
+		return response, nil
+	} else {
+		return &cachepbv1alpha2.GetResponse{}, nil
+	}
+
+}
+
+func (s *cacheServervalpha2) Put(ctx context.Context, pr *cachepbv1alpha2.PutRequest) (*cachepbv1alpha2.PutResponse, error) {
+	cache[pr.Key.Key] = pr.Value.Value
+	fmt.Printf("v1alpha2 PUT OK. key=%s value=%s opts.ttl=%d\n", string(pr.Key.Key), string(pr.Value.Value), pr.Opts.Ttl)
+	return &cachepbv1alpha2.PutResponse{}, nil
+}
+
+func (s *cacheServervalpha2) GetPut(ctx context.Context, pr *cachepbv1alpha2.PutRequest) (*cachepbv1alpha2.GetPutResponse, error) {
+	oldVal, ok := cache[pr.Key.Key]
+	cache[pr.Key.Key] = pr.Value.Value
+	fmt.Printf("v1alpha2 PUT OK. key=%s value=%s opts.ttl=%d\n", string(pr.Key.Key), string(pr.Value.Value), pr.Opts.Ttl)
+	if ok {
+		return &cachepbv1alpha2.GetPutResponse{Value: &cachepbv1alpha2.Value{Value: oldVal}}, nil
+	}
+	return &cachepbv1alpha2.GetPutResponse{}, nil
 }
 
 func main() {

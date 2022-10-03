@@ -55,19 +55,39 @@ func main() {
 		fmt.Printf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	c := cachepb.NewCacheServiceClient(conn)
 
+	// v1alpha: usage example
+	c := cachepb.NewCacheServiceClient(conn)
+	if retVal, err := c.Get(context.Background(), &cachepb.Key{Key: []byte{'g', 'R', 'P', 'C'}}); err == nil {
+		fmt.Printf(("v1alpha Get Result: %v\n"), retVal)
+	} else {
+		fmt.Printf("v1alpha: Error in invocation: %v\n", err)
+	}
+
+	// v1alpha2: usage example
 	cv1alpha2 := cachepbv1alpha2.NewCacheServiceClient(conn)
 
-	if retVal, err := c.Get(context.Background(), &cachepb.Key{Key: []byte{'g', 'R', 'P', 'C'}}); err == nil {
-		fmt.Printf(("Result %v\n"), retVal)
+	if retVal, err := cv1alpha2.Get(context.Background(), &cachepbv1alpha2.GetRequest{Key: &cachepbv1alpha2.Key{Key: "key1"}}); err == nil {
+		fmt.Printf(("v1alpha2 Get Result: %v\n"), retVal)
 	} else {
 		fmt.Printf("Error in invocation: %v\n", err)
 	}
 
-	if retVal, err := cv1alpha2.Get(context.Background(), &cachepbv1alpha2.Key{Key: []byte{'g', 'R', 'P', 'C'}}); err == nil {
-		fmt.Printf(("v1alpha2 Result %v\n"), retVal)
-	} else {
-		fmt.Printf("Error in invocation: %v\n", err)
-	}
+	retValPut, _ := cv1alpha2.Put(context.Background(),
+		&cachepbv1alpha2.PutRequest{Key: &cachepbv1alpha2.Key{Key: "key1"},
+			Value: &cachepbv1alpha2.Value{Value: "value1"},
+			Opts:  &cachepbv1alpha2.Options{Ttl: 1000}})
+	fmt.Printf("v1alpha2 Put Result: %v\n", retValPut)
+
+	retValGet, _ := cv1alpha2.Get(context.Background(), &cachepbv1alpha2.GetRequest{Key: &cachepbv1alpha2.Key{Key: "key1"}})
+	fmt.Printf("v1alpha2 Get Result: %v\n", retValGet)
+
+	retValGetPut, _ := cv1alpha2.GetPut(context.Background(),
+		&cachepbv1alpha2.PutRequest{Key: &cachepbv1alpha2.Key{Key: "key1"},
+			Value: &cachepbv1alpha2.Value{Value: "value1a"},
+			Opts:  &cachepbv1alpha2.Options{Ttl: 1000}})
+	fmt.Printf(("v1alpha2 GetPut Result %v\n"), retValGetPut)
+
+	retValGet, _ = cv1alpha2.Get(context.Background(), &cachepbv1alpha2.GetRequest{Key: &cachepbv1alpha2.Key{Key: "key1"}})
+	fmt.Printf("v1alpha2 Get Result: %v\n", retValGet)
 }
