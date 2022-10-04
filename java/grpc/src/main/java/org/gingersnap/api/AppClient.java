@@ -1,4 +1,4 @@
-package org.gingersnapcloud.api;
+package org.gingersnap.api;
 
 import com.google.protobuf.Duration;
 import com.google.protobuf.util.JsonFormat;

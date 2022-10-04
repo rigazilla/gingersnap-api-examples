@@ -1,4 +1,4 @@
-module github.com/rigazilla/gingersnap-cloud-api-examples/golang/protobuf
+module github.com/rigazilla/gingersnap-api-examples/golang/protobuf
 
 go 1.18
 

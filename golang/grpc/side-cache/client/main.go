@@ -25,8 +25,8 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	cachepb "github.com/rigazilla/gingersnap-cloud-api-examples/golang/grpc/side-cache/client/gingersnap-cloud-api/service/cache/v1alpha"
-	cachepbv1alpha2 "github.com/rigazilla/gingersnap-cloud-api-examples/golang/grpc/side-cache/client/gingersnap-cloud-api/service/cache/v1alpha2"
+	cachepb "github.com/rigazilla/gingersnap-api-examples/golang/grpc/side-cache/client/gingersnap-api/service/cache/v1alpha"
+	cachepbv1alpha2 "github.com/rigazilla/gingersnap-api-examples/golang/grpc/side-cache/client/gingersnap-api/service/cache/v1alpha2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -35,11 +35,11 @@ const (
 	defaultName = "world"
 )
 
-//go:generate protoc --proto_path=../../../../gingersnap-cloud-api service/cache/v1alpha/cache.proto --go-grpc_out=. --go_out=.
-//go:generate protoc --proto_path=../../../../gingersnap-cloud-api --grpc-gateway_out=logtostderr=true:. service/cache/v1alpha/cache.proto
+//go:generate protoc --proto_path=../../../../gingersnap-api service/cache/v1alpha/cache.proto --go-grpc_out=. --go_out=.
+//go:generate protoc --proto_path=../../../../gingersnap-api --grpc-gateway_out=logtostderr=true:. service/cache/v1alpha/cache.proto
 
-//go:generate protoc --proto_path=../../../../gingersnap-cloud-api service/cache/v1alpha2/cache.proto --go-grpc_out=. --go_out=.
-//go:generate protoc --proto_path=../../../../gingersnap-cloud-api --grpc-gateway_out=logtostderr=true:. service/cache/v1alpha2/cache.proto
+//go:generate protoc --proto_path=../../../../gingersnap-api service/cache/v1alpha2/cache.proto --go-grpc_out=. --go_out=.
+//go:generate protoc --proto_path=../../../../gingersnap-api --grpc-gateway_out=logtostderr=true:. service/cache/v1alpha2/cache.proto
 
 func main() {
 	if os.Getenv("GRPC_SERVER_PORT") == "" {

@@ -26,8 +26,8 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/rigazilla/gingersnap-cloud-api-examples/golang/grpc/example/server/gingersnap-cloud-api/config/cache/v1alpha"
-	gr "github.com/rigazilla/gingersnap-cloud-api-examples/golang/grpc/example/server/regionstore/v1alpha"
+	pb "github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/server/gingersnap-api/config/cache/v1alpha"
+	gr "github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/server/regionstore/v1alpha"
 	"google.golang.org/grpc"
 )
 
@@ -57,8 +57,8 @@ func (s *server) GetRegion(ctx context.Context, in *gr.GetRegionRequest) (*pb.Re
 	return mapOfRegion[reg], nil
 }
 
-//go:generate protoc --proto_path=../protos/ --proto_path=../../../../gingersnap-cloud-api/ --go_out=. --go-grpc_out=. config/cache/v1alpha/region.proto config/cache/v1alpha/cache.proto config/cache/v1alpha/datasource.proto
-//go:generate protoc --proto_path=../protos/ --proto_path=../../../../gingersnap-cloud-api/ --go-grpc_opt=Mconfig/cache/v1alpha/region.proto=github.com/rigazilla/gingersnap-cloud-api-examples/golang/grpc/example/server/gingersnap-cloud-api/config/cache/v1alpha --go_opt=Mconfig/cache/v1alpha/region.proto=github.com/rigazilla/gingersnap-cloud-api-examples/golang/grpc/example/server/gingersnap-cloud-api/config/cache/v1alpha --go_out=. --go-grpc_out=.  server.proto
+//go:generate protoc --proto_path=../protos/ --proto_path=../../../../gingersnap-api/ --go_out=. --go-grpc_out=. config/cache/v1alpha/region.proto config/cache/v1alpha/cache.proto config/cache/v1alpha/datasource.proto
+//go:generate protoc --proto_path=../protos/ --proto_path=../../../../gingersnap-api/ --go-grpc_opt=Mconfig/cache/v1alpha/region.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/server/gingersnap-api/config/cache/v1alpha --go_opt=Mconfig/cache/v1alpha/region.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/server/gingersnap-api/config/cache/v1alpha --go_out=. --go-grpc_out=.  server.proto
 func main() {
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))

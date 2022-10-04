@@ -1,4 +1,4 @@
-package org.gingersnapcloud.api;
+package org.gingersnap.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;

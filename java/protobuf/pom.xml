@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.gingersnap-cloud.api</groupId>
+	<groupId>org.gingersnap.api</groupId>
 	<artifactId>protobuf</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<name>protobuf</name>
 	<properties>
-		<org.gingersnap-cloud.api.basedir>${project.basedir}/../../gingersnap-cloud-api</org.gingersnap-cloud.api.basedir>
+		<org.gingersnap.api.basedir>${project.basedir}/../../gingersnap-api</org.gingersnap.api.basedir>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 	</properties>
@@ -70,7 +70,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<protoSourceRoot>${org.gingersnap-cloud.api.basedir}</protoSourceRoot>
+					<protoSourceRoot>${org.gingersnap.api.basedir}</protoSourceRoot>
 					<protocArtifact>com.google.protobuf:protoc:4.0.0-rc-2:exe:${os.detected.classifier}</protocArtifact>
 				</configuration>
 			</plugin>
