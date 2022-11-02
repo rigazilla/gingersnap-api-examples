@@ -1,3 +1,5 @@
 [submodule "gingersnap-api"]
 	path = gingersnap-api
-	url = git@github.com:gingersnap-project/api.git
+	url = git@github.com:rigazilla/gingersnap-api.git
+[submodule "gingersnap-api/"]
+	branch = proto-gen

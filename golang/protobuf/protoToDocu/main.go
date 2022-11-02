@@ -16,7 +16,7 @@ import (
 // The --go_opt=module=.. strips out the default module for the generated files, so files are generated
 // in the `config/cache/v1alpha` folder in the go module root and can be imported as
 // `import "your-module-name/config/cache/v1alpha`
-//go:generate protoc --proto_path=gingersnap-api  --go_out=. config/cache/v1alpha1/cache.proto apimachinery/pkg/api/resource/quantity.proto
+//go:generate protoc --proto_path=../../../gingersnap-api  --go_out=. config/cache/v1alpha1/cache.proto apimachinery/pkg/api/resource/quantity.proto
 func main() {
 	cpuRequest := resource.MustParse("1")
 	memoryRequest := resource.MustParse("1Gi")
