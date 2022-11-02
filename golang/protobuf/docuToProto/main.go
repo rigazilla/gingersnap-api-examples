@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"os"
 
+	"encoding/json"
+
 	"github.com/golang/protobuf/proto"
-	"github.com/rigazilla/gingersnap-api-examples/golang/protobuf/gingersnap-api/config/cache/v1alpha"
-	"google.golang.org/protobuf/encoding/protojson"
+	"github.com/rigazilla/gingersnap-api-examples/golang/protobuf/docuToProto/api/v1alpha1"
 	yamme "sigs.k8s.io/yaml"
 )
 
@@ -15,45 +16,65 @@ import (
 // The --go_opt=module=.. strips out the default module for the generated files, so files are generated
 // in the `config/cache/v1alpha` folder in the go module root and can be imported as
 // `import "your-module-name/config/cache/v1alpha`
-//go:generate protoc --proto_path=../../../gingersnap-api  --go_out=.. config/cache/v1alpha/region.proto config/cache/v1alpha/cache.proto config/cache/v1alpha/datasource.proto
+//go:generate protoc --proto_path=gingersnap-api  --go_out=. config/cache/v1alpha1/cache.proto apimachinery/pkg/api/resource/quantity.proto
 
 func main() {
 	yaml := `
-name: cacheExample
-namespace: nsExample
-regions:
-  - name: Region1
-    datasource: Datasource1
-    rule:
-        jsonpath:
-          value: some.domain.stores
-    expiration:
-        schedule: 0 0 1 * *
-  - name: Region2
-    datasource: Datasource2
-    rule:
-        wildcard:
-          value: /pets/(.*)
-    preload:
-        http:
-          url: value
-        schedule: 0 0 1 * *
-    expiration:
-        lifespan: 86400s
-    bound:
-        count:
-          value: 1000
+  eagerCachingRuleSpecs:
+    myEagerCacheRule1:
+      cacheRef:
+        name: myCache
+        namespace: myNamespace
+      resources:
+        requests:
+          memory: "1Gi"
+          cpu: "500m"
+        limits:
+          memory: "2Gi"
+          cpu: "1"
+      tableName: TABLE_EAGER_RULE_1
+      key:
+        format: JSON
+        keySeparator: ','
+        keyColumns:
+          - col1
+          - col3
+          - col4
+      value:
+        valueColumns:
+          - col6
+          - col7
+          - col8
+  lazyCachingRuleSpecs:
+    myLazyCacheRule1:
+      cacheRef:
+        name: myCache
+        namespace: myNamespace
+      query: select name,surname,address,age from myTable where name='?' and value='?'
+      value:
+        valueColumns:
+          - name
+          - surname
+          - address
 `
-	json, err := yamme.YAMLToJSON([]byte(yaml))
+	jsonString, err := yamme.YAMLToJSON([]byte(yaml))
 	if err != nil {
 		fmt.Printf("json err: %v\n", err)
 	}
-	cache := &v1alpha.Cache{}
-	err = protojson.Unmarshal(json, cache)
+	cache := &v1alpha1.CacheConf{}
+	err = json.Unmarshal(jsonString, cache)
 	if err != nil {
 		fmt.Printf("proto err: %v\n", err)
 	}
 	printer := proto.TextMarshaler{}
 	fmt.Println("============ Readable Protobuf Output =============")
 	printer.Marshal(os.Stdout, cache)
+	fmt.Printf("Resources\n")
+	fmt.Printf("    Requests: memory=%d, cpu=%d\n",
+		cache.EagerCachingRuleSpecs["myEagerCacheRule1"].Resources.Requests.Memory.Value(),
+		cache.EagerCachingRuleSpecs["myEagerCacheRule1"].Resources.Requests.Cpu.MilliValue())
+	fmt.Printf("    Limits: memory=%d, cpu=%d\n",
+		cache.EagerCachingRuleSpecs["myEagerCacheRule1"].Resources.Limits.Memory.Value(),
+		cache.EagerCachingRuleSpecs["myEagerCacheRule1"].Resources.Limits.Cpu.MilliValue())
+
 }

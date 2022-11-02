@@ -1,11 +1,13 @@
 package org.gingersnap.api;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.protobuf.util.JsonFormat;
 import com.google.protobuf.Duration;
-import config.cache.v1alpha.*;
+import gingersnap.config.cache.v1alpha1.*;
+import k8s.io.apimachinery.pkg.api.resource.*;
 
 /**
  * Hello world!
@@ -14,42 +16,73 @@ import config.cache.v1alpha.*;
 public class AppProtobufToJson {
         // Conversion protobuf -> json
         public static void main(String[] args) {
-                // Build region1
-                // {"name": "region1", "datasource": "DataSource1"
-                // , "rule": {"jsonpath": {"value": "some.domain.stores"}}
-                // , "expiration": {"schedule": "0 0 1 * *"}}
-                Jsonpath.Builder jp = Jsonpath.newBuilder().setValue("some.domain.stores");
-                List<Region> regions = new ArrayList<Region>();
-                Rule.Builder r1 = Rule.newBuilder().setJsonpath(jp);
-                Expiration.Builder ex = Expiration.newBuilder().setSchedule("0 0 1 * *");
-                Region.Builder r = Region.newBuilder().setName("region1")
-                                .setDatasource("DataSource1").setExpiration(ex);
-                r.setRule(r1);
-                regions.add(r.build());
-                // Build region2
-                // {"name": "region2", "datasource": "DataSource2"
-                // , "rule": {"wildcard": {"value": "/pets/(.*)"}}
-                // , "preload": {"http": {"url": "value"},"schedule": "0 0 1 * *"}
-                // ,"expiration": {"lifespan": "86400s"}
-                // ,"bound": {"count": {"value": "1000"}}}
-                Wildcard.Builder wc = Wildcard.newBuilder().setValue("/pets/(.*)");
-                r = Region.newBuilder().setName("region2")
-                                .setDatasource("DataSource2");
-                Http.Builder ht = Http.newBuilder().setUrl("value");
-                Count.Builder co = Count.newBuilder().setValue(1000);
-                Bound.Builder bl = Bound.newBuilder().setCount(co);
-                Preload.Builder pr = Preload.newBuilder().setSchedule("0 0 1 * *").setHttp(ht);
-                r1 = Rule.newBuilder().setWildcard(wc);
-                Duration.Builder ls = Duration.newBuilder().setSeconds(24 * 3600);
-                ex = Expiration.newBuilder().setLifespan(ls);
-                r.setRule(r1).setPreload(pr).setBound(bl).setExpiration(ex);
-                regions.add(r.build());
+                EagerCachingRuleSpec.Builder eagerRule1Builder = EagerCachingRuleSpec.newBuilder();
+                // Creating fields for Eager Rule
+                // Populating name ref
+                NamespacedRef.Builder ns = NamespacedRef.newBuilder().setName("myCache").setNamespace("myNamespace");
+
+                {
+                        // Populating resources
+                        Resources.Builder eagerRule1ResourcesBuilder = Resources.newBuilder();
+                        ResourceQuantity.Builder eagerRule1LimitsBuilder = ResourceQuantity.newBuilder();
+                        ResourceQuantity.Builder eagerRule1RequestsBuilder = ResourceQuantity.newBuilder();
+                        QuantityOuterClass.Quantity.Builder cpuLimits = QuantityOuterClass.Quantity.newBuilder();
+                        QuantityOuterClass.Quantity.Builder cpuRequests = QuantityOuterClass.Quantity.newBuilder();
+                        QuantityOuterClass.Quantity.Builder memoryLimits = QuantityOuterClass.Quantity.newBuilder();
+                        QuantityOuterClass.Quantity.Builder memoryRequests = QuantityOuterClass.Quantity.newBuilder();
+                        memoryLimits.setString("2Gi");
+                        memoryRequests.setString("1Gi");
+                        cpuLimits.setString("1");
+                        cpuRequests.setString("500m");
+                        eagerRule1LimitsBuilder.setCpu(cpuLimits).setMemory(memoryLimits);
+                        eagerRule1RequestsBuilder.setCpu(cpuRequests).setMemory(memoryRequests);
+                        eagerRule1ResourcesBuilder.setLimits(eagerRule1LimitsBuilder)
+                                        .setRequests(eagerRule1RequestsBuilder);
+                        // Populating key
+                        List<String> keyColumns = Arrays.asList("col1", "col3", "col4");
+                        Key.Builder keyBuilder = Key.newBuilder()
+                                        .setFormat(KeyFormat.JSON)
+                                        .setKeySeparator(",")
+                                        .addAllKeyColumns(keyColumns);
+                        // Populating value
+                        List<String> valueColumns = Arrays.asList("col6", "col7", "col8");
+                        Value.Builder valueBuilder = Value.newBuilder()
+                                        .addAllValueColumns(valueColumns);
+                        // Assembling Eager Rule
+                        eagerRule1Builder.setTableName("TABLE_EAGER_RULE_1");
+                        // Adding resources
+                        eagerRule1Builder.setResources(eagerRule1ResourcesBuilder);
+                        // Adding key
+                        eagerRule1Builder.setKey(keyBuilder);
+                        // Adding value
+                        eagerRule1Builder.setValue(valueBuilder);
+                        // Adding ref to the cache
+                        eagerRule1Builder.setCacheRef(ns);
+                }
+
+
+                LazyCachingRuleSpec.Builder lazyRule1Builder = LazyCachingRuleSpec.newBuilder();
+                // Creating fields for Eager Rule
+                {
+                        // Populating value
+                        List<String> valueColumns = Arrays.asList("name", "surname", "address");
+                        Value.Builder valueBuilder = Value.newBuilder()
+                                        .addAllValueColumns(valueColumns);
+                        // Assembling Lazy Rule
+                        lazyRule1Builder.setQuery("select name,surname,address,age from myTable where name='?' and value='?'");
+                        // Adding Value
+                        lazyRule1Builder.setValue(valueBuilder);
+                        // Adding ref to the cache
+                        lazyRule1Builder.setCacheRef(ns);
+                }
+
                 // Build cache
-                Cache.Builder cb = Cache.newBuilder().setName("cacheExample")
-                                .setNamespace("nsExample").addAllRegions(regions);
-                Cache c = cb.build();
+                CacheConf.Builder cacheConfBuilder = CacheConf.newBuilder()
+                        .putEagerCachingRuleSpecs("myEagerCacheRule1", eagerRule1Builder.build())
+                        .putLazyCachingRuleSpecs("myLazyCacheRule1", lazyRule1Builder.build());
+                CacheConf cacheConf = cacheConfBuilder.build();
                 try {
-                        System.out.println(JsonFormat.printer().print(c));
+                        System.out.println(JsonFormat.printer().print(cacheConf));
                 } catch (Exception e) {
                 }
         }

@@ -7,12 +7,13 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import config.cache.v1alpha.Region;
+import gingersnap.config.cache.v1alpha1.LazyCachingRuleSpec;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
-import regionstore.v1alpha.CreateRegionRequest;
-import regionstore.v1alpha.GetRegionRequest;
+import rulestore.v1alpha1.CreateLazyRuleRequest;
+import rulestore.v1alpha1.GetLazyRuleRequest;
+import rulestore.v1alpha1.RuleStoreGrpc.RuleStoreImplBase;
 
 public class AppServer {
 	  private static final Logger logger = Logger.getLogger(AppServer.class.getName());
@@ -28,7 +29,7 @@ public class AppServer {
 	  /** Create a RouteGuide server using serverBuilder as a base and features as data. */
 	  public AppServer(ServerBuilder<?> serverBuilder, int port) {
 	    this.port = port;
-	    server = serverBuilder.addService(new RegionstoreService())
+	    server = serverBuilder.addService(new RulestoreService())
 	        .build();
 	  }
 
@@ -75,23 +76,24 @@ public class AppServer {
 	    server.start();
 	    server.blockUntilShutdown();
 	  }
-private static class RegionstoreService extends regionstore.v1alpha.RegionStoreGrpc.RegionStoreImplBase {
+private static class RulestoreService extends   RuleStoreImplBase {
 	
-	private Map<String, Region> mapOfRegions = new HashMap<>();
+	private Map<String, LazyCachingRuleSpec> mapOfRules = new HashMap<>();
 	@Override
-	public void createRegion(CreateRegionRequest request, StreamObserver<Region> responseObserver) {
-		Region newR = request.getRegion();
-		String name = newR.getName();
-		Region oldR = mapOfRegions.get(name);
-		mapOfRegions.put(name, newR);
+	public void createLazyRule(CreateLazyRuleRequest request, StreamObserver<LazyCachingRuleSpec> responseObserver) {
+		LazyCachingRuleSpec newR = request.getRule();
+		// Using namespace.name as key
+		String name = newR.getCacheRef().getNamespace()+"."+newR.getCacheRef().getName();
+		LazyCachingRuleSpec oldR = mapOfRules.get(name);
+		mapOfRules.put(name, newR);
 		responseObserver.onNext(oldR);
 		responseObserver.onCompleted();
 	}
 
 	@Override
-	public void getRegion(GetRegionRequest request, StreamObserver<Region> responseObserver) {
+	public void getLazyRule(GetLazyRuleRequest request, StreamObserver<LazyCachingRuleSpec> responseObserver) {
 		String name = request.getName();
-		Region region = mapOfRegions.get(name);
+		LazyCachingRuleSpec region = mapOfRules.get(name);
 		responseObserver.onNext(region);
 		responseObserver.onCompleted();
 	}
