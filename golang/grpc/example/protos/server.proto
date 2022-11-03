@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-option go_package = "regionstore/v1alpha";
+option go_package = "regionstore/v1alpha1";
 import "config/cache/v1alpha/region.proto";
 package regionstore;
 
 service RegionStore {
-  rpc CreateRegion(CreateRegionRequest) returns (config.cache.v1alpha.Region);
+  rpc CreateRegion(CreateLazyRuleRequest) returns (config.cache.v1alpha1.LazyRuleSpec);
   rpc GetRegion(GetRegionRequest) returns (config.cache.v1alpha.Region);
 }
 message CreateRegionRequest { config.cache.v1alpha.Region region = 1; }

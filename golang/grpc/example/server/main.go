@@ -26,8 +26,8 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/server/gingersnap-api/config/cache/v1alpha"
-	gr "github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/server/regionstore/v1alpha"
+	pb "github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/server/api/v1alpha1"
+	gr "github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/server/rulestore/v1alpha1"
 	"google.golang.org/grpc"
 )
 
@@ -37,28 +37,28 @@ var (
 
 // server is used to implement helloworld.GreeterServer.
 type server struct {
-	gr.UnimplementedRegionStoreServer
+	gr.UnimplementedRuleStoreServer
 }
 
-var mapOfRegion = make(map[string]*pb.Region)
+var mapOfRegion = make(map[string]*pb.LazyCachingRuleSpec)
 
 // SayHello implements helloworld.GreeterServer
-func (s *server) CreateRegion(ctx context.Context, in *gr.CreateRegionRequest) (*pb.Region, error) {
-	var reg = in.GetRegion()
-	log.Printf("Received: %v", reg)
-	old := mapOfRegion[reg.Name]
-	mapOfRegion[reg.Name] = reg
+func (s *server) CreateLazyRule(ctx context.Context, in *gr.CreateLazyRuleRequest) (*pb.LazyCachingRuleSpec, error) {
+	var rule = in.GetRule()
+	log.Printf("Received: %v", rule)
+	key := rule.CacheRef.Namespace + "." + rule.CacheRef.Name
+	old := mapOfRegion[key]
+	mapOfRegion[key] = rule
 	return old, nil
 }
 
-func (s *server) GetRegion(ctx context.Context, in *gr.GetRegionRequest) (*pb.Region, error) {
-	var reg = in.GetName()
-	log.Printf("Received: %v", reg)
-	return mapOfRegion[reg], nil
+func (s *server) GetRegion(ctx context.Context, in *gr.GetLazyRuleRequest) (*pb.LazyCachingRuleSpec, error) {
+	log.Printf("Received: %v", in.Name)
+	return mapOfRegion[in.Name], nil
 }
 
-//go:generate protoc --proto_path=../protos/ --proto_path=../../../../gingersnap-api/ --go_out=. --go-grpc_out=. config/cache/v1alpha/region.proto config/cache/v1alpha/cache.proto config/cache/v1alpha/datasource.proto
-//go:generate protoc --proto_path=../protos/ --proto_path=../../../../gingersnap-api/ --go-grpc_opt=Mconfig/cache/v1alpha/region.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/server/gingersnap-api/config/cache/v1alpha --go_opt=Mconfig/cache/v1alpha/region.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/server/gingersnap-api/config/cache/v1alpha --go_out=. --go-grpc_out=.  server.proto
+//go:generate protoc --proto_path=../../../../gingersnap-api/ --go_out=. --go_opt=Mconfig/cache/v1alpha1/cache.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/server/api/v1alpha1 config/cache/v1alpha1/cache.proto
+//go:generate protoc --proto_path=../../../../grpc-proto/ --proto_path=../../../../gingersnap-api/ --go_opt=Mconfig/cache/v1alpha1/cache.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/server/api/v1alpha1 --go-grpc_opt=Mconfig/cache/v1alpha1/cache.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/server/api/v1alpha1 --go_out=. --go-grpc_out=.  rulestoreServer.proto
 func main() {
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
@@ -67,7 +67,7 @@ func main() {
 	}
 	var opts []grpc.ServerOption
 	s := grpc.NewServer(opts...)
-	gr.RegisterRegionStoreServer(s, &server{})
+	gr.RegisterRuleStoreServer(s, &server{})
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

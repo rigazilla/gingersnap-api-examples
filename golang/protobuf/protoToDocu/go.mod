@@ -3,7 +3,6 @@ module github.com/rigazilla/gingersnap-api-examples/golang/protobuf/protoToDocu
 go 1.18
 
 require (
-	github.com/golang/protobuf v1.5.2
 	google.golang.org/protobuf v1.28.1
 	k8s.io/apimachinery v0.25.3
 )
