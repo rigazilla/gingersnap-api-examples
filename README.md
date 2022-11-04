@@ -10,17 +10,20 @@ Gingersnap Cloud API spec are include as git submodule, after cloned you may wan
 ### Protobuf document
 protoc command is embedded as `go:generate tag` and explained in the .go files.
 To run the examples:
-- `cd golang/protobuf`
-- `go generate ./...`
-- `go run protoToDocu/main.go`
-- `go run docuToProto/main.go`
+- `cd golang/protobuf/docuToProto` or `cd golang/protobuf/protoToDocu`
+- `go generate`
+- `go run main.go`
 
 ### gRPC API
 protoc command is embedded as `go:generate tag` and explained in the .go files.
-- `cd golang/grpc`
-- `go generate ./...`
-- `go run server/main.go`
-- in a different terminal `go run client/main.go`
+- `cd golang/grpc/example/server`
+- `go generate`
+- `go run main.go`
+
+in a different terminal:
+- `cd golang/grpc/example/client`
+- `go generate`
+- `go run main.go`
 
 
 ## Java

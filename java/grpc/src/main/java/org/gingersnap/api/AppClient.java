@@ -6,7 +6,6 @@ import java.util.List;
 import com.google.protobuf.Duration;
 import com.google.protobuf.util.JsonFormat;
 
-import gingersnap.api.service.cache.v1alpha2.GetResponse;
 import gingersnap.config.cache.v1alpha1.LazyCachingRuleSpec;
 import gingersnap.config.cache.v1alpha1.NamespacedRef;
 import gingersnap.config.cache.v1alpha1.Value;

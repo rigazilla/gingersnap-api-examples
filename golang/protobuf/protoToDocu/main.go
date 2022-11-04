@@ -12,7 +12,7 @@ import (
 // The --go_opt=module=.. strips out the default module for the generated files, so files are generated
 // in the `gingersnap-api/config/cache/v1alpha` folder in the go module root and can be imported as
 // `import "your-module-name/gingersnap-api/config/cache/v1alpha`
-//go:generate protoc --proto_path=../../.. --include_source_info --go_out=. --go_opt=Mgingersnap-api/config/cache/v1alpha1/cache.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/client/api/config/cache/v1alpha1 --go_opt=paths=source_relative gingersnap-api/config/cache/v1alpha1/cache.proto
+//go:generate protoc --proto_path=../../.. --include_source_info --descriptor_set_out=gingersnap-api/descriptor --go_out=. --go_opt=Mgingersnap-api/config/cache/v1alpha1/cache.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/client/api/config/cache/v1alpha1 --go_opt=paths=source_relative gingersnap-api/config/cache/v1alpha1/cache.proto
 func main() {
 	// TODO: use k8s type for quantity. Java side needs some work for this
 	// cpuRequest := resource.MustParse("1")
