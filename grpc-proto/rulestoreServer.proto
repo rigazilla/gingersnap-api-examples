@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option go_package = "rulestore/v1alpha1";
+option java_package = "rulestore.v1alpha1";
+import "gingersnap-api/config/cache/v1alpha1/cache.proto";
+option java_multiple_files = true;
+package rulestore;
+
+message CreateLazyRuleRequest { gingersnap.config.cache.v1alpha1.LazyCachingRuleSpec rule = 1; }
+message GetLazyRuleRequest { string name = 1; }
+service RuleStore {
+  rpc CreateLazyRule(CreateLazyRuleRequest) returns (gingersnap.config.cache.v1alpha1.LazyCachingRuleSpec);
+  rpc GetLazyRule(GetLazyRuleRequest) returns (gingersnap.config.cache.v1alpha1.LazyCachingRuleSpec);
+}
