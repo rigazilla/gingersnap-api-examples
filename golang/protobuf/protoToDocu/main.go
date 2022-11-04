@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/rigazilla/gingersnap-api-examples/golang/protobuf/protoToDocu/gingersnap-api/config/cache/v1alpha1"
-	"k8s.io/apimachinery/pkg/api/resource"
 )
 
 // Command below generates the set of .pb.go files. .proto comes for the gingersnap-api project
@@ -15,19 +14,24 @@ import (
 // `import "your-module-name/gingersnap-api/config/cache/v1alpha`
 //go:generate protoc --proto_path=../../.. --proto_path=../../../gingersnap-api --go_out=. --go_opt=Mgingersnap-api/config/cache/v1alpha1/cache.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/client/api/config/cache/v1alpha1 --go_opt=paths=source_relative gingersnap-api/config/cache/v1alpha1/cache.proto
 func main() {
-	cpuRequest := resource.MustParse("1")
-	memoryRequest := resource.MustParse("1Gi")
-	cpuLimit := resource.MustParse("2")
-	memoryLimit := resource.MustParse("2Gi")
+	// TODO: use k8s type for quantity. Java side needs some work for this
+	// cpuRequest := resource.MustParse("1")
+	// memoryRequest := resource.MustParse("1Gi")
+	// cpuLimit := resource.MustParse("2")
+	// memoryLimit := resource.MustParse("2Gi")
+	cpuRequest := "1"
+	memoryRequest := "1Gi"
+	cpuLimit := "2"
+	memoryLimit := "2Gi"
 	cache := v1alpha1.CacheSpec{
 		Resources: &v1alpha1.Resources{
 			Requests: &v1alpha1.ResourceQuantity{
-				Cpu:    &cpuRequest,
-				Memory: &memoryRequest,
+				Cpu:    cpuRequest,
+				Memory: memoryRequest,
 			},
 			Limits: &v1alpha1.ResourceQuantity{
-				Cpu:    &cpuLimit,
-				Memory: &memoryLimit,
+				Cpu:    cpuLimit,
+				Memory: memoryLimit,
 			},
 		},
 	}

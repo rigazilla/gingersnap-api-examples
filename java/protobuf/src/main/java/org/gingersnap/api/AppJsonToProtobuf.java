@@ -29,68 +29,6 @@ public class AppJsonToProtobuf {
         ObjectMapper jsonWriter = new ObjectMapper();
         return jsonWriter.writeValueAsString(obj);
     }
-    public static String json = 
-    "{"+
-"  \"eagerCachingRuleSpecs\": {"+
-"    \"myEagerCacheRule1\": {"+
-"      \"cacheRef\": {"+
-"        \"name\": \"myCache\","+
-"        \"namespace\": \"myNamespace\""+
-"      },"+
-"      \"resources\": {"+
-"        \"requests\": {"+
-"          \"memory\": {"+
-"            \"string\": \"1Gi\""+
-"          },"+
-"          \"cpu\": {"+
-"            \"string\": \"500m\""+
-"          }"+
-"        },"+
-"        \"limits\": {"+
-"          \"memory\": {"+
-"            \"string\": \"2Gi\""+
-"          },"+
-"          \"cpu\": {"+
-"            \"string\": \"1\""+
-"          }"+
-"        }"+
-"      },"+
-"      \"tableName\": \"TABLE_EAGER_RULE_1\","+
-"      \"key\": {"+
-"        \"format\": \"JSON\","+
-"        \"keySeparator\": \",\","+
-"        \"keyColumns\": ["+
-"          \"col1\","+
-"          \"col3\","+
-"          \"col4\""+
-"        ]"+
-"      },"+
-"      \"value\": {"+
-"        \"valueColumns\": ["+
-"          \"col6\","+
-"          \"col7\","+
-"          \"col8\""+
-"        ]"+
-"      }"+
-"    }"+
-"  },"+
-"  \"LazyCachingRuleSpecs\": {"+
-"    \"myLazyCacheRule1\": {"+
-"      \"cacheRef\": {"+
-"        \"name\": \"myCache\","+
-"        \"namespace\": \"myNamespace\""+
-"      },"+
-"      \"query\": \"select name,surname,address,age from myTable where name='?' and value='?'\","+
-"      \"value\": {"+
-"        \"valueColumns\": ["+
-"          \"name\","+
-"          \"surname\","+
-"          \"address\""+
-"        ]"+
-"      }"+
-"    }"+
-"  }"+
-"}";
 public static String yaml = 
 "eagerCachingRuleSpecs:\n"+
 "  myEagerCacheRule1:\n"+
@@ -99,15 +37,11 @@ public static String yaml =
 "      namespace: myNamespace\n"+
 "    resources:\n"+
 "      requests:\n"+
-"        memory:\n"+
-"          string: 1Gi\n"+
-"        cpu:\n"+
-"          string: 500m\n"+
+"        memory: \"1Gi\"\n"+
+"        cpu: \"500m\"\n"+
 "      limits:\n"+
-"        memory:\n"+
-"          string: 2Gi\n"+
-"        cpu:\n"+
-"          string: \"1\"\n"+
+"        memory: \"2Gi\"\n"+
+"        cpu:  \"1\"\n"+
 "    tableName: TABLE_EAGER_RULE_1\n"+
 "    key:\n"+
 "      format: JSON\n"+

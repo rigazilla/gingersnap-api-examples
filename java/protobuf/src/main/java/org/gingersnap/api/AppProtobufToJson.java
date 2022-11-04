@@ -26,14 +26,19 @@ public class AppProtobufToJson {
                         Resources.Builder eagerRule1ResourcesBuilder = Resources.newBuilder();
                         ResourceQuantity.Builder eagerRule1LimitsBuilder = ResourceQuantity.newBuilder();
                         ResourceQuantity.Builder eagerRule1RequestsBuilder = ResourceQuantity.newBuilder();
-                        QuantityOuterClass.Quantity.Builder cpuLimits = QuantityOuterClass.Quantity.newBuilder();
-                        QuantityOuterClass.Quantity.Builder cpuRequests = QuantityOuterClass.Quantity.newBuilder();
-                        QuantityOuterClass.Quantity.Builder memoryLimits = QuantityOuterClass.Quantity.newBuilder();
-                        QuantityOuterClass.Quantity.Builder memoryRequests = QuantityOuterClass.Quantity.newBuilder();
-                        memoryLimits.setString("2Gi");
-                        memoryRequests.setString("1Gi");
-                        cpuLimits.setString("1");
-                        cpuRequests.setString("500m");
+                        // TODO: use k8s types for quantity
+                        // QuantityOuterClass.Quantity.Builder cpuLimits = QuantityOuterClass.Quantity.newBuilder();
+                        // QuantityOuterClass.Quantity.Builder cpuRequests = QuantityOuterClass.Quantity.newBuilder();
+                        // QuantityOuterClass.Quantity.Builder memoryLimits = QuantityOuterClass.Quantity.newBuilder();
+                        // QuantityOuterClass.Quantity.Builder memoryRequests = QuantityOuterClass.Quantity.newBuilder();
+                        // memoryLimits.setString("2Gi");
+                        // memoryRequests.setString("1Gi");
+                        // cpuLimits.setString("1");
+                        // cpuRequests.setString("500m");
+                        String memoryLimits="2Gi";
+                        String memoryRequests="1Gi";
+                        String cpuLimits="1";
+                        String cpuRequests="500m";
                         eagerRule1LimitsBuilder.setCpu(cpuLimits).setMemory(memoryLimits);
                         eagerRule1RequestsBuilder.setCpu(cpuRequests).setMemory(memoryRequests);
                         eagerRule1ResourcesBuilder.setLimits(eagerRule1LimitsBuilder)

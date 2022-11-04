@@ -25,7 +25,7 @@ import (
 	"log"
 	"time"
 
-	pb "github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/client/api/config/cache/v1alpha1"
+	"github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/client/gingersnap-api/config/cache/v1alpha1"
 	gr "github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/client/rulestore/v1alpha1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -40,8 +40,8 @@ var (
 	name = flag.String("name", defaultName, "Name to greet")
 )
 
-//go:generate protoc --proto_path=../../../../gingersnap-api/ --go_out=api --go_opt=Mconfig/cache/v1alpha1/cache.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/client/api/config/cache/v1alpha1 --go_opt=paths=source_relative config/cache/v1alpha1/cache.proto
-//go:generate protoc --proto_path=../../../../grpc-proto/ --proto_path=../../../../gingersnap-api/ --go_opt=Mconfig/cache/v1alpha1/cache.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/client/api/config/cache/v1alpha1 --go-grpc_opt=Mconfig/cache/v1alpha1/cache.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/client/api/config/cache/v1alpha1 --go_out=. --go-grpc_out=.  rulestoreServer.proto
+//go:generate protoc --proto_path=../../../.. --go_out=. --go_opt=Mgingersnap-api/config/cache/v1alpha1/cache.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/client/gingersnap-api/config/cache/v1alpha1 --go_opt=paths=source_relative gingersnap-api/config/cache/v1alpha1/cache.proto
+//go:generate protoc --proto_path=../../../../grpc-proto/ --proto_path=../../../.. --go_opt=Mgingersnap-api/config/cache/v1alpha1/cache.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/client/gingersnap-api/config/cache/v1alpha1 --go-grpc_opt=Mgingersnap-api/config/cache/v1alpha1/cache.proto=github.com/rigazilla/gingersnap-api-examples/golang/grpc/example/client/gingersnap-api/config/cache/v1alpha1 --go_out=. --go-grpc_out=.  rulestoreServer.proto
 func main() {
 	flag.Parse()
 	// Set up a connection to the server.
@@ -50,53 +50,48 @@ func main() {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	c := gr.NewRegionStoreClient(conn)
+	c := gr.NewRuleStoreClient(conn)
 
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	var regReq = gr.CreateRegionRequest{
-		Region: &pb.Region{
-			Name:       "Region1",
-			Datasource: "Datasource1",
-			Rule: &pb.Rule{
-				RuleType: &pb.Rule_Jsonpath{
-					Jsonpath: &pb.Jsonpath{
-						Value: "some.domain.stores",
-					},
-				},
+	var ruleReq = gr.CreateLazyRuleRequest{
+		Rule: &v1alpha1.LazyCachingRuleSpec{
+			CacheRef: &v1alpha1.NamespacedRef{
+				Name:      "ruleName",
+				Namespace: "ruleNamespace",
 			},
-			Expiration: &pb.Expiration{
-				ExpirationType: &pb.Expiration_Schedule{
-					Schedule: "0 0 1 * *",
-				},
+			Query: "select * from MY_TABLE where name='?' and surname='?'",
+			Value: &v1alpha1.Value{
+				ValueColumns: []string{"col1", "col3", "col4"},
 			},
 		},
 	}
 
-	r, err := c.CreateRegion(ctx, &regReq)
+	r, err := c.CreateLazyRule(ctx, &ruleReq)
 	if err != nil {
-		log.Printf("could not create region: %v", err)
+		log.Printf("could not create rule: %v", err)
 	}
-	log.Printf("CreateRegion response: %v", r)
-	getRegReq := gr.GetRegionRequest{
-		Name: "Region1",
+	log.Printf("CreateLazyRule response: %v", r)
+	getRuleReq := gr.GetLazyRuleRequest{
+		Name: "ruleNamespace.ruleName",
 	}
-	r, err = c.GetRegion(ctx, &getRegReq)
+	r, err = c.GetLazyRule(ctx, &getRuleReq)
 	if err != nil {
-		log.Printf("could not get region: %v", err)
+		log.Printf("could not get rule: %v", err)
 	}
-	log.Printf("GetRegion response: %v", r)
-	regReq.Region.Datasource = "NewDataSource"
-	r, err = c.CreateRegion(ctx, &regReq)
-	if err != nil {
-		log.Printf("could not create region: %v", err)
-	}
-	log.Printf("CreateRegion response: %v", r)
+	log.Printf("GetLazyRule response: %v", r)
 
-	r, err = c.GetRegion(ctx, &getRegReq)
+	ruleReq.Rule.Query = "select name,age from MY_TABLE where name='?' and surname='?'"
+	r, err = c.CreateLazyRule(ctx, &ruleReq)
 	if err != nil {
-		log.Printf("could not get region: %v", err)
+		log.Printf("could not create rule: %v", err)
 	}
-	log.Printf("GetRegion response: %v", r)
+	log.Printf("CreateLazyRule response: %v", r)
+
+	r, err = c.GetLazyRule(ctx, &getRuleReq)
+	if err != nil {
+		log.Printf("could not get rule: %v", err)
+	}
+	log.Printf("GetLazyRule response: %v", r)
 }
